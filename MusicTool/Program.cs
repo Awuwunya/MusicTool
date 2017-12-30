@@ -95,7 +95,15 @@ namespace MusicTool {
 					}
 
 					if(!s.StartsWith("\"")) {
-						e("String expected!");
+						e("String expected! " + s);
+						return;
+					}
+					
+					string dvname = sget(s, s.IndexOf("\"", 1) + 1);
+					s = scut(s, s.IndexOf("\"", 1) + 2);
+
+					if (!s.StartsWith("\"")) {
+						e("String expected! "+ s);
 						return;
 					}
 
@@ -144,10 +152,10 @@ namespace MusicTool {
 							}
 						}
 
-						fwrite("_temp/.68k", "a section \n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"" + align + "\n\tasc2.w $8000," + name + "\n\tdc.w " + driver + "\n\tincbin \"music/" + file + "\"\n\teven");
+						fwrite("_temp/.68k", "a section \n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"" + align + "\n\tasc2.w $8000," + name + "\n\tasc2.w $8000,"+ dvname +"\n\tdc.w " + driver + "\n\tincbin \"music/" + file + "\"\n\teven");
 
 					} else if(type == "SMPS") {
-						string xf = "a section" + (z80 ? " obj(<obj>)" : "") + "<align>\n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"\n\tinclude \"code/smps2asm.asm\"\n\tinclude \"" + type + '/' + driver + "/smps2asm.asm\"\n\tasc2.w $8000," + name + "\n\tdc.w " + driver + "\n\topt ae-\n\tinclude \"music/" + file + "\"\n\teven";
+						string xf = "a section" + (z80 ? " obj(<obj>)" : "") + "<align>\n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"\n\tinclude \"code/smps2asm.asm\"\n\tinclude \"" + type + '/' + driver + "/smps2asm.asm\"\n\tasc2.w $8000," + name + "\n\tasc2.w $8000," + dvname + "\n\tdc.w " + driver + "\n\topt ae-\n\tinclude \"music/" + file + "\"\n\teven";
 						string align = "";
 						if(z80) {
 							fwrite("_temp/.68k", xf.Replace("<obj>", "" + z80addr(addr)).Replace("<align>", ""));
@@ -169,7 +177,7 @@ namespace MusicTool {
 						fwrite("_temp/.68k", xf.Replace("<obj>", "" + (z80 ? z80addr(addr) : addr)).Replace("<align>", align));
 
 					} else if(type == "GEMS") {
-						fwrite("_temp/.68k", "a section \n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"\n\tasc2.w $8000," + name + "\n\tdc.w " + driver +','+ id);
+						fwrite("_temp/.68k", "a section \n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"\n\tasc2.w $8000," + name + "\n\tasc2.w $8000," + dvname + "\n\tdc.w " + driver +','+ id);
 
 					} else {
 						Console.WriteLine("Invalid sound driver type '"+ type +"'!");
