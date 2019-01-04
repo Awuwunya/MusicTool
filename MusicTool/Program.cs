@@ -155,7 +155,7 @@ namespace MusicTool {
 						fwrite("_temp/.68k", "a section \n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"" + align + "\n\tasc2.w $8000," + name + "\n\tasc2.w $8000,"+ dvname +"\n\tdc.w " + driver + "\n\tincbin \"music/" + file + "\"\n\teven");
 
 					} else if(type == "SMPS") {
-						string xf = "a section" + (z80 ? " obj(<obj>)" : "") + "<align>\n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"\n\tinclude \"code/smps2asm.asm\"\n\tinclude \"" + type + '/' + driver + "/smps2asm.asm\"\n\tasc2.w $8000," + name + "\n\tasc2.w $8000," + dvname + "\n\tdc.w " + driver + "\n\topt ae-\n\tinclude \"music/" + file + "\"\n\teven";
+						string xf = "a section" + (z80 ? " obj(<obj>)" : "") + "<align>\n\tinclude \"drv.asm\"\n\tinclude \"code/macro.asm\"\n\tinclude \"" + type + '/' + driver + "/smps2asm (ASM68K).asm\"\n\tasc2.w $8000," + name + "\n\tasc2.w $8000," + dvname + "\n\tdc.w " + driver + "\n\topt ae-\n\tinclude \"music/" + file + "\"\n\teven";
 						string align = "";
 						if(z80) {
 							fwrite("_temp/.68k", xf.Replace("<obj>", "" + z80addr(addr)).Replace("<align>", ""));
